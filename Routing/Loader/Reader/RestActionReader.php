@@ -414,6 +414,7 @@ class RestActionReader
             'FOS\RestBundle\Request\ParamFetcherInterface',
             'Symfony\Component\Validator\ConstraintViolationListInterface',
             'Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter',
+            'Psr\Http\Message\MessageInterface',
         ];
 
         $arguments = [];
@@ -425,8 +426,10 @@ class RestActionReader
             $argumentClass = $argument->getClass();
             if ($argumentClass) {
                 foreach ($ignoreClasses as $class) {
-                    if ($argumentClass->getName() === $class || $argumentClass->isSubclassOf($class)) {
-                        continue 2;
+                    if (class_exists($class) || interface_exists($class)) {
+                        if ($argumentClass->getName() === $class || $argumentClass->isSubclassOf($class)) {
+                            continue 2;
+                        }
                     }
                 }
             }
